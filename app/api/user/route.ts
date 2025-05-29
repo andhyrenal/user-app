@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateKeyPairSync } from 'crypto';
 import { writeFileSync, existsSync, readFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
+import { encryptText, generateKey } from '@/lib/encryptEmail';
 
 const dataDir = join(process.cwd(), 'data');
-const filePath = join(dataDir, 'generated-keys.json');
+const filePath = join(dataDir, 'data.json');
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,10 +44,14 @@ export async function POST(req: NextRequest) {
       existingData = JSON.parse(fileData);
     }
 
+    const key = await generateKey();
+
+    console.log(encryptText(email, key))
+
     const newEntry = {
       id,
       name,
-      email,
+      email: await encryptText(email, key),
       publicKey,
       createdAt: new Date().toISOString(),
     };
