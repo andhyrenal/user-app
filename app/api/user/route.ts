@@ -3,6 +3,7 @@ import { generateKeyPairSync } from 'crypto';
 import { writeFileSync, existsSync, readFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { encryptText, generateKey } from '@/lib/encryptEmail';
+import { User } from '@/components/User/FormUser/FormUser.types';
 
 const dataDir = join(process.cwd(), 'data');
 const filePath = join(dataDir, 'data.json');
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Load existing data
-    let existingData: any[] = [];
+    let existingData: User[] = [];
     if (existsSync(filePath)) {
       const fileData = readFileSync(filePath, 'utf-8');
       existingData = JSON.parse(fileData);
